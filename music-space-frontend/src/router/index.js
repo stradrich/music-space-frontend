@@ -18,10 +18,26 @@ const router = createRouter({
       name: 'About',
       component: () => import('../views/AboutView.vue')
     },
+    {
+      path: '/aboutCompany',
+      name: 'About Company',
+      component: () => import('../views/AboutCompany.vue')
+
+    },
     { // Contact form
       path: '/contact-form',
       name: 'Contact Form',
       component: () => import('../views/ContactForm.vue')
+    },
+    { // Learn more
+      path: '/learnmore',
+      name: 'Learn More',
+      component: () => import ('../views/LearnMore.vue')
+    },
+    { // Under Construction
+      path: '/underconstruction',
+      name: 'Under Construction',
+      component: () => import ('/src/views/Underconstruction.vue')
     },
     // SECTION 2 (registration & authentication):
     // Create account/profile
@@ -68,6 +84,12 @@ const router = createRouter({
       component: () => import ('../views/UpdateDeleteProfile.vue')
     },
     /// LISTING
+    /// See PUBLIC listings
+    {
+      path: '/publicListing',
+      name: 'Public Listing',
+      component: () => import ('/src/views/PublicListing.vue')
+    },
     /// See own listings (ALL - Empty by default)
     {
       path: '/listing/user/:id',
@@ -120,7 +142,7 @@ const router = createRouter({
     {
       path: '/allListing',
       name: 'All Listing',
-      component: () => import ('../views/AllListing.vue')
+      component: () => import ('../views/Listing.vue')
     },
     /// See specific listing by ID
     {

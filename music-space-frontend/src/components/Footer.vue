@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <footer class="p-4 bg-black ">
+  <footer class="p-4 bg-black mt-10">
         <div class="text-center">
             
             <label class="flex justify-center text-sm font-normal text-white">

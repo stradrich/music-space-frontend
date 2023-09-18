@@ -7,13 +7,16 @@ import Footer from './components/Footer.vue'
 </script>
 
 <template>
-  <div>
+   <!-- always on top -->
+  <div class="h-screen bg-white"  >
     <Navbar/>
-    
-    <div>
+  <div>
+    <!-- show homepage and changes according to activity -->
       <RouterView/>
     </div>
-    <Footer/> 
+
+    <!-- always below -->
+     <Footer class="mb-auto"/> 
   </div>
 </template>
 
