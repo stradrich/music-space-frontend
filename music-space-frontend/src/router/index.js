@@ -18,6 +18,11 @@ const router = createRouter({
       name: 'About',
       component: () => import('../views/AboutView.vue')
     },
+    { // Contact form
+      path: '/contact-form',
+      name: 'Contact Form',
+      component: () => import('../views/ContactForm.vue')
+    },
     // SECTION 2 (registration & authentication):
     // Create account/profile
     {
