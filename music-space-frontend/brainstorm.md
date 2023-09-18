@@ -1,3 +1,9 @@
+header
+navbar
+sidebar
+footer ✅
+
+
 ```
 Health
 GET http://localhost:8080/
