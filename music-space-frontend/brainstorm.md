@@ -1,6 +1,10 @@
-header
-navbar
-sidebar
+1. sign up link not working 
+2. booking routerlink got problem
+
+
+header X
+navbar ✅
+sidebar X
 footer ✅
 
 

@@ -1,9 +1,14 @@
 <template>
-    <p>The Music Space App is a platform that connects musicians from different level (amateurs, music major, music teachers, concert performers, recording artists), allowing them to share and discover practice, rehearsal, recording spaces in different cities. The app aims to foster collaboration, creativity, and community among musicians, making it easier for local and travelling musicians to find suitable spaces for rehearsals and collaborations.</p>
+    <div class="flex justify-center mb-">
+        <img src="/src/assets/jaconda-music-book.gif" alt="">
+    </div>
+    
+
+    <p>The Melkro's is a platform that connects musicians from different level (amateurs, music major, music teachers, concert performers, recording artists), allowing them to share and discover practice, rehearsal, recording space in different cities. The app aims to foster collaboration, creativity, and community among musicians, making it easier for local and travelling musicians to find suitable spaces for rehearsals and collaborations.</p>
     <br>
-    <p> At the same time, local music centres or studios or conservatory can maximize their profit by renting out their unused space through The Music Space App. By listing their available rooms, studios or performance spaces on the platform, these establishments can tap into a broader network of musicians and music enthusiasts, effectively turning their under-utilised areas into profitable assets. </p>
+    <p> At the same time, local music centres or studios or conservatory can maximize their profit by renting out their unused space through the Melkro's App. By listing their available rooms, studios or performance spaces on the platform, these establishments can tap into a broader network of musicians and music enthusiasts, effectively turning their under-utilised areas into profitable assets. </p>
     <br>
-    <p>The app targets musicians or artists of all levels who seek spaces for practicing their art, they can also collaborate and network with other musicians. It appeals to both local musicians looking to share their spaces and traveling artists in need of private temporary spaces. </p>
+    <p>Melkro's targets musicians or artists of all levels who seek spaces for practicing their art, they can also collaborate and network with other musicians. It appeals to both local musicians looking to share their spaces and traveling artists in need of private temporary spaces. </p>
     <br>
     <p>This service will be expanded into other artistic engagement such as dance, theater, visual art, etc.</p>
     <!-- <div class="flex justify-between">
@@ -39,5 +44,9 @@
             <li>Ads and Sponsorship</li>
         </div>
     </div> -->
+    
+   
+    
+    
 
 </template>

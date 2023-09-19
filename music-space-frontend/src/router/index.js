@@ -37,14 +37,14 @@ const router = createRouter({
     { // Under Construction
       path: '/underconstruction',
       name: 'Under Construction',
-      component: () => import ('/src/views/Underconstruction.vue')
+      component: () => import ('../views/Underconstruction.vue')
     },
     // SECTION 2 (registration & authentication):
     // Create account/profile
     {
       path: '/signup',
       name: 'Sign Up',
-      component: () => import('../views/SignUpView.vue')
+      component: () => import('../views/SignUpForm.vue')
     },
     {
       path: '/login',
@@ -88,7 +88,7 @@ const router = createRouter({
     {
       path: '/publicListing',
       name: 'Public Listing',
-      component: () => import ('/src/views/PublicListing.vue')
+      component: () => import ('../views/PublicListing.vue')
     },
     /// See own listings (ALL - Empty by default)
     {
