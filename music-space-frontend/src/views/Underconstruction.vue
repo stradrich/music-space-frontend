@@ -1,4 +1,7 @@
 <template>
+    <div class="flex justify-center mb-">
+        <img src="/src/assets/ikigai-artist-in-lotus-position-working-in-his-workshop.png" alt="">
+    </div>
     <div class="under-construction">
       <h2>Service Available in 2024</h2>
       <p>We're currently working hard to bring you an amazing experience. This page will be up and running in 2024.</p>

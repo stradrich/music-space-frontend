@@ -1,5 +1,10 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth'
+
+const store = useAuthStore()
+
 
 const firstName = ref('');
 const lastName = ref('');
@@ -7,6 +12,7 @@ const email = ref('');
 const password = ref('');
 const major = ref('');
 const role = ref('');
+const errors = ref([]);
 
 const firstNameRules = ref([
   (value) => {
@@ -52,22 +58,77 @@ const roleOptions = [
 ];
 
 function isValidEmail(email) {
-  // Your email validation logic here
-  // You can use a regular expression or other validation methods
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
-const signUp = () => {
-  // Implement your sign-up logic here
-  // You can access form data like firstName, lastName, email, password, major, and role
-  // Validate the data and perform the necessary actions
-};
+const router = useRouter();
+
+const signUp = async () => {
+  // Reset validation errors
+  errors.value = [];
+
+  // Validate first name
+  firstNameRules.value.forEach((rule) => {
+    const result = rule(firstName.value);
+    if (result !== true) {
+      errors.value.push(result);
+    }
+  });
+
+  // Validate last name
+  lastNameRules.value.forEach((rule) => {
+    const result = rule(lastName.value);
+    if (result !== true) {
+      errors.value.push(result);
+    }
+  });
+
+  // Validate email
+  emailRules.value.forEach((rule) => {
+    const result = rule(email.value);
+    if (result !== true) {
+      errors.value.push(result);
+    }
+  });
+
+  // Validate password
+  passwordRules.value.forEach((rule) => {
+    const result = rule(password.value);
+    if (result !== true) {
+      errors.value.push(result);
+    }
+  });
+
+ // Check if there are any validation errors
+if (errors.value.length === 0) {
+  try {
+    // Perform the sign-up logic if all fields are valid
+    const userData = await store.registerUser(firstName.value, lastName.value, email.value, password.value, major.value, role.value);
+    console.log(`User ${userData.id} Registered`);
+    // Redirect to the profile page
+
+    // NEED TO STORE SIGN UP USERS IN DATABASE BEFORE GOING TO LOGIN PAGE. LOGIN PAGE WILL VALIDATE IF USER EXIST IN DATABASE AND REDIRECT TO PROFILE PAGE.
+    router.push('/login');
+  } catch (error) {
+    // Handle registration errors (e.g., display an error message)
+    console.error('Registration error:', error);
+  }
+  } else {
+  // Handle validation errors (e.g., display error messages)
+  // console.log('Validation errors:', errors.value);
+  }
 </script>
 
-<template>
-  <v-sheet width="300" class="mx-auto">
-    <v-form @submit.prevent="signUp">
+ <template>
+    <div class="flex justify-center mb-0">
+      <img width="400" height="400" src="/src/assets/IMG_0918.JPG" alt=""/>
+     </div>
+
+
+  
+     <v-sheet width="300" class="mx-auto">
+      <v-form @submit.prevent="signUp">
       <v-text-field
         v-model="firstName"
         label="First name"
@@ -110,5 +171,11 @@ const signUp = () => {
 
       <v-btn type="submit" block class="mt-2">Submit</v-btn>
     </v-form>
-  </v-sheet>
-</template>
+     </v-sheet> 
+</template> 
+
+
+
+
+
+

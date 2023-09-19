@@ -24,9 +24,9 @@ import Button from '../components/Button.vue';
         
             
         
-        <div>
-          
-        </div>
+        <div class="p-4 mt-16 mb-15">
+        <img src="/src/assets/ikigai-girl-at-home-playing-a-stringed-musical-instrument-1.png" alt="">
+    </div>
     </div>
     
 </template>

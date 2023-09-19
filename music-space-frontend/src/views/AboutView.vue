@@ -8,14 +8,14 @@ import Underconstruction from './Underconstruction.vue';
           
           <!-- If logged in, direct to listing page. If not logged in, go to log in page + sign up. -->
         <div class="mx-10">
-            <img width="40" height="40" src="/src/assets/IMG_0912.JPG" alt="space"/> 
+            <img class="ml-7 mb-2" width="40" height="40" src="/src/assets/IMG_0912.JPG" alt="space"/> 
             <RouterLink to="/publicListing">Space for ART</RouterLink>
            
         </div>
 
          <!-- Page under construction -->
         <div>
-            <img width="40" height="40" src="/src/assets/IMG_0915.JPG" alt="instruments"/> 
+            <img class="ml-11 mb-2" width="40" height="40" src="/src/assets/IMG_0915.JPG" alt="instruments"/> 
             <RouterLink to='/underconstruction'><span>Musical instruments 
                 <br> and equipments
             </span></RouterLink>
@@ -23,7 +23,7 @@ import Underconstruction from './Underconstruction.vue';
         </div>
         <!-- Page under construction -->
         <div class="mx-10">
-            <img width="40" height="40" src="/src/assets/icons8-music-conductor-96.png" alt="music-conductor--v2"/>
+            <img class="ml-7 mb-2" width="40" height="40" src="/src/assets/icons8-music-conductor-96.png" alt="music-conductor--v2"/>
             <RouterLink to='/underconstruction'><span>Hire our ARTIST</span></RouterLink>
             
         </div>
@@ -39,7 +39,7 @@ import Underconstruction from './Underconstruction.vue';
         <p>Individual lesson, Masterclasses, Seminar, Exhibition?</p>
     </div>
 
-    <div class="mb-5 hover:underline">
+    <div class="mb-5">
     <RouterLink to="/contact-form">More...</RouterLink>
     </div>
 
