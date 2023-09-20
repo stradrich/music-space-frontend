@@ -20,7 +20,7 @@ export default {
 
 <template>
   <div class="flex justify-center">
-    <div class="image-container mx-8" v-for="(image, index) in images" :key="index">
+    <div class="image-container mx-8" v-for="(image, index) in images" :key="index" loading="lazy">
       <div>
         <h4 class="flex items-center">
           <a :href="image.locationLink" class="mr-4">

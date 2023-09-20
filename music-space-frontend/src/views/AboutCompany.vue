@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center mb-">
-        <img src="/src/assets/jaconda-music-book.gif" alt="">
+        <img src="/src/assets/jaconda-music-book.gif" alt="" loading="lazy">
     </div>
     
 

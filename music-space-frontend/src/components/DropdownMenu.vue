@@ -42,7 +42,7 @@ const toggleDropdown = () => {
           href="#"
           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
         >
-        <RouterLink to="/profile/:id">Profile</RouterLink>
+        <RouterLink to="#">Profile</RouterLink>
         
         </a>
       </li>
@@ -52,7 +52,7 @@ const toggleDropdown = () => {
           href="#"
           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
         >
-        <RouterLink to="/booking/user/:id">Booking</RouterLink>
+        <RouterLink to="#">Booking</RouterLink>
         </a>
       </li>
         <!-- If logged in, direct to listing page. If not logged in, go to log in page + sign up. -->

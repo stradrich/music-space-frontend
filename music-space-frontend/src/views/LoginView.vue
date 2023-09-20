@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'; // Import Vue Router
+import { useAuthStore } from '../stores/auth'
+
+const authStore = useAuthStore()
 
 const email = ref('');
 const password = ref('');
@@ -9,46 +12,59 @@ const showPassword = ref(false);
 const router = useRouter(); // Create a router instance
 
 // THIS ONE CAN BE REPLACED BY PINIA 🍍🍍🍍
-const login = () => {
-  // Reset errors
-  errors.value = {};
+// const login = () => {
+//   // Reset errors
+//   errors.value = {};
 
-  // Validate username
-  if (!email.value) {
-    errors.value.email = 'Email is required.';
-  }
+//   // Validate username
+//   if (!email.value) {
+//     errors.value.email = 'Email is required.';
+//   }
 
-  // Validate password
-  if (!password.value) {
-    errors.value.password = 'Password is required.';
-  } else if (password.value.length < 8) {
-    errors.value.password = 'Password must be at least 8 characters long.';
-  }
+//   // Validate password
+//   if (!password.value) {
+//     errors.value.password = 'Password is required.';
+//   } else if (password.value.length < 8) {
+//     errors.value.password = 'Password must be at least 8 characters long.';
+//   }
 
-  // If no errors, submit form
-  if (Object.keys(errors.value).length === 0) {
+//   // If no errors, submit form
+//   if (Object.keys(errors.value).length === 0) {
     
-    // Send login request to server with username and password
-    // If successful, redirect to home page using Vue Router
-    // BEFORE LOGIN, profile-booking-logout ALL DEAD LINK, listing only public listing.
-    // LOGIN PAGE WILL VALIDATE IF USER EXIST IN DATABASE
-    // IF LOGIN successful, REDIRECT TO PROFILE PAGE and allow profile-booking-listing-logout
+//     // Send login request to server with username and password
+//     // If successful, redirect to home page using Vue Router
+//     // BEFORE LOGIN, profile-booking-logout ALL DEAD LINK, listing only public listing.
+//     // LOGIN PAGE WILL VALIDATE IF USER EXIST IN DATABASE
+//     // IF LOGIN successful, REDIRECT TO PROFILE PAGE and allow profile-booking-listing-logout
   
-    // If unsuccessful, display error message
-    if (email.value === 'xyz@gmail.com' && password.value === 'mypassword') {
-      // Replace with your own logic to handle successful login
-      alert('Logged in successfully!');
-      router.push('/profile'); // Redirect to the profile page
-    } else {
-      alert('Invalid username or password.');
-    }
+//     // If unsuccessful, display error message
+//     if (email.value === 'xyz@gmail.com' && password.value === 'mypassword') {
+//       // Replace with your own logic to handle successful login
+//       alert('Logged in successfully!');
+//       router.push('/profile'); // Redirect to the profile page
+//     } else {
+//       alert('Invalid username or password.');
+//     }
+//   }
+// };
+
+const login = async () => {
+  console.log('Before login');
+  const isSuccess = await authStore.login({ email: email.value, password: password.value });
+  console.log('After login', isSuccess);
+  
+  if (isSuccess) {
+    alert('Logged in successfully!');
+    router.push('/profile'); // Redirect to the profile page
+  } else {
+    alert('Invalid username or password.');
   }
 };
 </script>
 
 <template>
   <div class="flex justify-center mb-0">
-    <img width="400" height="400" src="/src/assets/IMG_0917.PNG" alt=""/>
+    <img width="400" height="400" src="/src/assets/IMG_0917.PNG" alt="" loading="lazy"/>
 
   </div>
    

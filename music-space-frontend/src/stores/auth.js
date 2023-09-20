@@ -52,14 +52,14 @@ export const useAuthStore = defineStore({
           
             //   const response = await fetch('http://localhost:5174/auth/register', options);
               const response = await fetch('http://localhost:8080/auth/register', options) // Correct the URL
-              // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
+             
 
               if (response.ok) {
                 // Registration was successful (status code 2xx)
                 const data = await response.json();
                 console.log('Successfully registered as a User - by 🍍🍍🍍', data);
                 // Redirect to the user's profile page (you need to handle this part)
-                router.push('/profile/:id');
+                router.push('/login');
               } else {
                 // Registration failed (status code 4xx or 5xx)
                 const errorData = await response.json();
@@ -72,6 +72,11 @@ export const useAuthStore = defineStore({
           
         async login(email, password) {
             try {
+                   // Client-side validation
+                if (!email || !password) {
+                    throw new Error('Email and password are required.');
+                }
+
                 const options = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json'},
@@ -80,8 +85,12 @@ export const useAuthStore = defineStore({
 
                 // const response = await fetch('http://localhost:5174/auth/login', options) // Correct the URL
                 const response = await fetch('http://localhost:8080/auth/login', options) // Correct the URL
-                // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
+                
                 const data = await response.json()
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed.');
+                  }
                 
                 const accessToken = data.accessToken
                 this.accessToken = accessToken
@@ -96,11 +105,20 @@ export const useAuthStore = defineStore({
                 console.log('Login - Current User', this.currentUser);
 
                 if (this.currentUser) {
-                    this.userLoggedIn = true
-                    return this.currentUser.id
+                    // Check the user's role and redirect accordingly
+                    if (this.currentUser.role === 'spaceProvider') {
+                        // Redirect to the spaceProvider profile page
+                        router.push(`/profile/spaceProvider/${this.currentUser.id}`);
+                    } else if (this.currentUser.role === 'spaceUser') {
+                        // Redirect to the spaceUser profile page
+                        router.push(`/profile/spaceUser/${this.currentUser.id}`);
+                    }
+                    this.userLoggedIn = true;
+                    return this.currentUser.id;
                 }
             } catch (error) {
-                console.error(error)
+                router.push('/login');
+                console.error(error);
             }
         },
         async forgotPassword(email) {
@@ -113,7 +131,7 @@ export const useAuthStore = defineStore({
 
                 // const response = await fetch('http://localhost:5174/auth/forgot-password', options) // Correct the URL
                 const response = await fetch('http://localhost:8080/auth/forgot-password', options) // Correct the URL
-                // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
+                
                 const data = await response.json()
 
                 console.log(data)
@@ -132,7 +150,7 @@ export const useAuthStore = defineStore({
 
                 // const response = await fetch('http://localhost:5174/auth/reset-password', options) // Correct the URL
                 const response = await fetch('http://localhost:8080/auth/reset-password', options) // Correct the URL
-                // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
+               
                 const data = await response.json()
 
                 console.log(data);
@@ -156,7 +174,7 @@ export const useAuthStore = defineStore({
 
                 // const response = await fetch('http://localhost:5174/auth/change-password', options) // Correct the URL
                 const response = await fetch('http://localhost:8080/auth/change-password', options) // Correct the URL
-                // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
+                
                 const data = await response.json()
 
                 console.log(data);

@@ -1,21 +1,21 @@
 <script setup>
-import Underconstruction from './Underconstruction.vue';
+// import Underconstruction from '../views/Underconstruction.vue'
 </script>
 
-<template>
+<template> 
     <Navbar/>  
     <div class="flex bg-white shadow-md rounded-md space-x-2 text-xs border p-4 justify-center">
           
           <!-- If logged in, direct to listing page. If not logged in, go to log in page + sign up. -->
         <div class="mx-10">
-            <img class="ml-7 mb-2" width="40" height="40" src="/src/assets/IMG_0912.JPG" alt="space"/> 
+            <img class="ml-7 mb-2" width="40" height="40" src="/src/assets/IMG_0912.JPG" alt="space" loading="lazy"/> 
             <RouterLink to="/publicListing">Space for ART</RouterLink>
            
         </div>
 
          <!-- Page under construction -->
         <div>
-            <img class="ml-11 mb-2" width="40" height="40" src="/src/assets/IMG_0915.JPG" alt="instruments"/> 
+            <img class="ml-11 mb-2" width="40" height="40" src="/src/assets/IMG_0915.JPG" alt="instruments" loading="lazy"/> 
             <RouterLink to='/underconstruction'><span>Musical instruments 
                 <br> and equipments
             </span></RouterLink>
@@ -23,7 +23,7 @@ import Underconstruction from './Underconstruction.vue';
         </div>
         <!-- Page under construction -->
         <div class="mx-10">
-            <img class="ml-7 mb-2" width="40" height="40" src="/src/assets/icons8-music-conductor-96.png" alt="music-conductor--v2"/>
+            <img class="ml-7 mb-2" width="40" height="40" src="/src/assets/icons8-music-conductor-96.png" alt="music-conductor--v2" loading="lazy"/>
             <RouterLink to='/underconstruction'><span>Hire our ARTIST</span></RouterLink>
             
         </div>

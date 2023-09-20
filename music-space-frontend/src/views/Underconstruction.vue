@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center mb-">
-        <img src="/src/assets/ikigai-artist-in-lotus-position-working-in-his-workshop.png" alt="">
+        <img src="/src/assets/ikigai-artist-in-lotus-position-working-in-his-workshop.png" alt="" loading="lazy">
     </div>
     <div class="under-construction">
       <h2>Service Available in 2024</h2>
