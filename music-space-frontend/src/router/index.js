@@ -73,9 +73,9 @@ const router = createRouter({
     /// See own profile (Empty by default)
     /// Create profile 
     {
-      path: '/profile/:id',
+      path: '/profile/spacepProvider/:id',
       name: 'Provider Profile',
-      component: () => import ('../views/Profile.vue')
+      component: () => import ('../views/ProviderProfile.vue')
     },
     /// Update and Delete OWN profile 
     {
@@ -126,9 +126,9 @@ const router = createRouter({
     /// PROFILE 
     /// See own profile (Empty by default)
     {
-      path: '/profile/:id',
+      path: '/profile/spaceUser/:id',
       name: 'Customer Profile',
-      component: () => import ('../views/Profile.vue')
+      component: () => import ('../views/CustomerProfile.vue')
     },
     /// Create profile (Already done in registration and authentication)
     /// Update and Delete OWN profile 

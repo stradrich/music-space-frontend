@@ -9,7 +9,7 @@ import Button from '../components/Button.vue';
         <p class="mb-8 lg:mb-16 font-light text-center text-gray-500 dark:text-gray-400 sm:text-xl">Got a technical issue? Want to send feedback about our services? Need details about our Business plan? Let us know.</p>
         
         <div class="flex justify-center mb-">
-                <img style="height: 12rem; width: 10rem" src="/src/assets/juicy-woman-preparing-startup-rocket-to-launch-with-ideas.png" alt="">
+                <img style="height: 12rem; width: 10rem" src="/src/assets/juicy-woman-preparing-startup-rocket-to-launch-with-ideas.png" alt="" loading="lazy">
             </div>
         <form action="#">
             <div>

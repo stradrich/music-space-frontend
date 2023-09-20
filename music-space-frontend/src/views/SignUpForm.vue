@@ -156,7 +156,7 @@ if (errors.value.length !== 0) {
 }
 
 try {
-  // Check if the username or email is already in use
+  // Check if the username or email is already in use (This one should be done in the backend)
   const isUsernameTaken = await checkUsernameExists(username.value, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY5NTE1MDUyM30.dqxJ9huli7IZknssVLJGQxgMR7P2pj-TpUYZ3OTnGbo");
   const isEmailTaken = await checkEmailExists(email.value, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY5NTE1MDUyM30.dqxJ9huli7IZknssVLJGQxgMR7P2pj-TpUYZ3OTnGbo");
 
@@ -187,7 +187,7 @@ try {
 
 <template>
     <div class="flex justify-center mb-0">
-      <img width="400" height="400" src="/src/assets/IMG_0918.JPG" alt=""/>
+      <img width="400" height="400" src="/src/assets/IMG_0918.JPG" alt="" loading="lazy"/>
     </div>
 
   <v-sheet width="300" class="mx-auto">

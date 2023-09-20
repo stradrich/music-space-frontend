@@ -5,7 +5,7 @@
 
 <template>
     <div>
-        <p>PROFILE</p>
+        <p>PROVIDER PROFILE</p>
       
 
     </div>
