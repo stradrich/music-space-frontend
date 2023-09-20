@@ -73,7 +73,7 @@ const router = createRouter({
     /// See own profile (Empty by default)
     /// Create profile 
     {
-      path: '/profile/spacepProvider/:id',
+      path: '/profile/spaceProvider/:id',
       name: 'Provider Profile',
       component: () => import ('../views/ProviderProfile.vue')
     },

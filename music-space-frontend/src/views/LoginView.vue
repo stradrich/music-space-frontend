@@ -1,13 +1,15 @@
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router'; // Import Vue Router
+import { useRouter } from 'vue-router'; 
 import { useAuthStore } from '../stores/auth'
+
+import axios from 'axios';
 
 const authStore = useAuthStore()
 
 const email = ref('');
 const password = ref('');
-const errors = ref({});
+// const errors = ref({});
 const showPassword = ref(false);
 const router = useRouter(); // Create a router instance
 
@@ -48,18 +50,65 @@ const router = useRouter(); // Create a router instance
 //   }
 // };
 
+
 const login = async () => {
-  console.log('Before login');
-  const isSuccess = await authStore.login({ email: email.value, password: password.value });
-  console.log('After login', isSuccess);
-  
-  if (isSuccess) {
-    alert('Logged in successfully!');
-    router.push('/profile'); // Redirect to the profile page
-  } else {
+  try {
+    console.log('Email:', email.value);
+    console.log('Password:', password.value);
+    console.log('Before login');
+
+    // Make the login request using Axios
+    const response = await axios.post('http://localhost:8080/auth/login', {
+      email: email.value,
+      password: password.value,
+    });
+
+    // Extract the JWT token from the response
+    const accessToken = response.data.accessToken;
+
+    // Store the accessToken securely in your frontend, e.g., in local storage or a cookie
+    localStorage.setItem('access_token', accessToken);
+
+    // You can also use the token for subsequent authenticated requests
+    const isSuccess = true; // You can set this based on your login logic
+
+    console.log('After login, isSuccess:', isSuccess);
+
+    if (isSuccess) {
+      alert('Logged in successfully!');
+      // Fetch current user
+
+      const currentUser = await authStore.getCurrentUser();
+      console.log(`Login - Current User, ${currentUser?.id}`);
+
+      if (currentUser) {
+        // Check the user's role and redirect accordingly
+        if (currentUser.role === 'spaceProvider') {
+          // Redirect to the spaceProvider profile page
+          router.push(`/profile/spaceProvider/${currentUser.id}`);
+        } else if (currentUser.role === 'spaceUser') {
+          // Redirect to the spaceUser profile page
+          router.push(`/profile/spaceUser/${currentUser.id}`);
+        }
+        
+        // Set the userLoggedIn flag to true if needed
+        const userLoggedIn = true;
+        return currentUser.id;
+      }
+    } else {
+      // This part is redundant 
+      alert('Invalid username or password.');
+    }
+  } catch (error) {
+    // Handle login errors here
     alert('Invalid username or password.');
+    console.error('Login error:', error);
   }
 };
+
+
+
+
 </script>
 
 <template>
@@ -80,6 +129,7 @@ const login = async () => {
           outlined
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append="showPassword = !showPassword"
+          autocomplete="off"
         ></v-text-field>
         <a href="#" class="text-body-2 font-weight-regular">Forgot Password?</a>
         <v-btn type="submit" block class="mt-2 bg-black">Sign in</v-btn>
