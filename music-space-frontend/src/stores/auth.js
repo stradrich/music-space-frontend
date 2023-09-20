@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 // JWT utils
-import * as jose from 'jose'
+import * as jose from 'jose';
 import router from '../router/index'
+// import jwt from 'jsonwebtoken';
+
 
 export const useAuthStore = defineStore({
     id: 'auth',
@@ -13,11 +15,12 @@ export const useAuthStore = defineStore({
                 email: null,
                 role: null
             },
-            accessToken: null // Define accessToken in the state
+            accessToken: null, // Define accessToken in the state
+            userLoggedIn: false, // Initialize userLoggedIn as false
         }
     },
     getters: {
-
+        isAuthenticated: (state) => !!state.currentUser,
     },
     actions: {
         // CRUD
@@ -27,8 +30,10 @@ export const useAuthStore = defineStore({
 
                 if (!accessToken) throw 'Access token not found'
 
-                // Decode JWT token
-                const decodedToken = jose.decodeToken(accessToken)
+                // Decode JWT token using jose.jwt.verify
+                const decodedToken = jose.jwt.verify(accessToken);
+                // const decodedToken = jose.jwt.verify(accessToken, secretKey);
+
 
                 if (!decodedToken || !decodedToken.id) throw 'Invalid token or missing user ID'
 
@@ -42,6 +47,8 @@ export const useAuthStore = defineStore({
                 console.log(error);
             }
         },
+
+  
         async registerUser(username, firstName, lastName, email, password, major, role) {
             try {
               const options = {
@@ -52,7 +59,7 @@ export const useAuthStore = defineStore({
           
             //   const response = await fetch('http://localhost:5174/auth/register', options);
               const response = await fetch('http://localhost:8080/auth/register', options) // Correct the URL
-             
+              // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
 
               if (response.ok) {
                 // Registration was successful (status code 2xx)
@@ -72,7 +79,9 @@ export const useAuthStore = defineStore({
           
         async login(email, password) {
             try {
-                   // Client-side validation
+                console.log('Received email:', email);
+                console.log('Received password:', password);
+                //    Client-side validation
                 if (!email || !password) {
                     throw new Error('Email and password are required.');
                 }
@@ -85,8 +94,10 @@ export const useAuthStore = defineStore({
 
                 // const response = await fetch('http://localhost:5174/auth/login', options) // Correct the URL
                 const response = await fetch('http://localhost:8080/auth/login', options) // Correct the URL
-                
+                console.log('Response Status Code:', response.status);
+                // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
                 const data = await response.json()
+                console.log('Response Data:', data);
 
                 if (!response.ok) {
                     throw new Error(data.message || 'Login failed.');
@@ -100,22 +111,10 @@ export const useAuthStore = defineStore({
                 localStorage.setItem('access_token', accessToken)
                 console.log('Local storage access token', accessToken);
 
-                // Fetch current user
-                this.currentUser = await this.getCurrentUser()
-                console.log('Login - Current User', this.currentUser);
+                 // Wait for a short delay to ensure the access token is saved and retrieved
+                 await new Promise(resolve => setTimeout(resolve, 1000)); // Adjust the delay as needed
+                
 
-                if (this.currentUser) {
-                    // Check the user's role and redirect accordingly
-                    if (this.currentUser.role === 'spaceProvider') {
-                        // Redirect to the spaceProvider profile page
-                        router.push(`/profile/spaceProvider/${this.currentUser.id}`);
-                    } else if (this.currentUser.role === 'spaceUser') {
-                        // Redirect to the spaceUser profile page
-                        router.push(`/profile/spaceUser/${this.currentUser.id}`);
-                    }
-                    this.userLoggedIn = true;
-                    return this.currentUser.id;
-                }
             } catch (error) {
                 router.push('/login');
                 console.error(error);
@@ -131,7 +130,7 @@ export const useAuthStore = defineStore({
 
                 // const response = await fetch('http://localhost:5174/auth/forgot-password', options) // Correct the URL
                 const response = await fetch('http://localhost:8080/auth/forgot-password', options) // Correct the URL
-                
+                // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
                 const data = await response.json()
 
                 console.log(data)
@@ -150,7 +149,7 @@ export const useAuthStore = defineStore({
 
                 // const response = await fetch('http://localhost:5174/auth/reset-password', options) // Correct the URL
                 const response = await fetch('http://localhost:8080/auth/reset-password', options) // Correct the URL
-               
+                // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
                 const data = await response.json()
 
                 console.log(data);
@@ -174,7 +173,7 @@ export const useAuthStore = defineStore({
 
                 // const response = await fetch('http://localhost:5174/auth/change-password', options) // Correct the URL
                 const response = await fetch('http://localhost:8080/auth/change-password', options) // Correct the URL
-                
+                // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
                 const data = await response.json()
 
                 console.log(data);
