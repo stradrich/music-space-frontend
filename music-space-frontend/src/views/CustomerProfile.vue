@@ -5,7 +5,7 @@
 
 <template>
     <div>
-        <p>CUSTOMER PROFILE</p>
+        <p>CUSTOMER PROFILE (Space User)</p>
       
 
     </div>

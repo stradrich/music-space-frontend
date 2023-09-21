@@ -5,7 +5,7 @@
 
 <template>
     <div>
-        <p>PROVIDER PROFILE</p>
+        <p>SPACE PROVIDER PROFILE</p>
       
 
     </div>

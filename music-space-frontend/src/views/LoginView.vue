@@ -69,34 +69,32 @@ const login = async () => {
     // Store the accessToken securely in your frontend, e.g., in local storage or a cookie
     localStorage.setItem('access_token', accessToken);
 
-    // You can also use the token for subsequent authenticated requests
-    const isSuccess = true; // You can set this based on your login logic
+    // Fetch current user
+    const currentUser = await authStore.getCurrentUser();
+    console.log(`Login - Current User, ${currentUser?.id}`);
+    console.log(`Current User's role:, ${currentUser?.role}`);
 
-    console.log('After login, isSuccess:', isSuccess);
+    // Determine if the login was successful based on your criteria
+    const isSuccess = currentUser.role !== null; // Change this based on your success condition
+    console.log(isSuccess);
+    console.log(currentUser.role);
 
     if (isSuccess) {
-      alert('Logged in successfully!');
-      // Fetch current user
-
-      const currentUser = await authStore.getCurrentUser();
-      console.log(`Login - Current User, ${currentUser?.id}`);
-
-      if (currentUser) {
-        // Check the user's role and redirect accordingly
-        if (currentUser.role === 'spaceProvider') {
-          // Redirect to the spaceProvider profile page
-          router.push(`/profile/spaceProvider/${currentUser.id}`);
-        } else if (currentUser.role === 'spaceUser') {
-          // Redirect to the spaceUser profile page
-          router.push(`/profile/spaceUser/${currentUser.id}`);
-        }
-        
-        // Set the userLoggedIn flag to true if needed
-        const userLoggedIn = true;
-        return currentUser.id;
+      console.log(currentUser.role);
+      // Check the user's role and redirect accordingly
+      if (currentUser.role === 'provider') {
+        // Redirect to the spaceProvider profile page
+        // router.push(`/profile/spaceProvider/1`); // static route
+        router.push(`/profile/spaceProvider/${currentUser.id}`);
+      } else if (currentUser.role === 'customer') {
+        // Redirect to the spaceUser profile page
+        router.push(`/profile/spaceUser/${currentUser.id}`);
       }
+      
+      // Set the userLoggedIn flag to true if needed
+      const userLoggedIn = true;
+      alert('Logged in successfully!');
     } else {
-      // This part is redundant 
       alert('Invalid username or password.');
     }
   } catch (error) {
@@ -105,6 +103,8 @@ const login = async () => {
     console.error('Login error:', error);
   }
 };
+
+
 
 
 
