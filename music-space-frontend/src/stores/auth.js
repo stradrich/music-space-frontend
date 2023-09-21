@@ -31,8 +31,8 @@ export const useAuthStore = defineStore({
                 if (!accessToken) throw 'Access token not found'
 
                 // Decode JWT token using jose.jwt.verify
-                const decodedToken = jose.jwt.verify(accessToken);
-                // const decodedToken = jose.jwt.verify(accessToken, secretKey);
+                const decodedToken = jose.decodeJwt(accessToken);
+               
 
 
                 if (!decodedToken || !decodedToken.id) throw 'Invalid token or missing user ID'
