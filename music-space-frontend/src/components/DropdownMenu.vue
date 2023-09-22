@@ -1,6 +1,17 @@
 <script setup>
 import { ref } from 'vue';
 import Navbar from './Navbar.vue';
+import { useAuthStore } from '../stores/auth';
+import { computed } from 'vue';
+
+const authStore = useAuthStore();
+const userLoggedIn = computed(() => !!authStore.currentUser);
+  const currentUser = computed(() => authStore.currentUser);
+
+const logout = () => {
+    authStore.logout(); // Call the logout action from your authentication store
+    // Optionally, you can also perform a route change or any other logic here
+};
 
 const isDropdownHidden = ref(true);
 
@@ -64,15 +75,19 @@ const toggleDropdown = () => {
         <RouterLink to="/publicListing">Listing</RouterLink>
         </a>
       </li>
-        <!-- If not logged, disable this link with #  -->
       <li>
-        <a
-          href="#"
-          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-        >
-         Log Out
-        </a>
-      </li>
+        <div>
+          <RouterLink to="/login"  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Log In </RouterLink>
+        </div>
+       </li>
+        <!-- If not logged, disable this link with #  -->
+        <li>
+         <button
+          @click="logout"
+          >
+          <RouterLink to="/"  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Log Out </RouterLink>
+           </button>
+       </li>
       <!-- Add more list items here -->
     </ul>
   </div>

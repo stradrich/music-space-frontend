@@ -65,6 +65,7 @@ const login = async () => {
 
     // Extract the JWT token from the response
     const accessToken = response.data.accessToken;
+    console.log(accessToken, `by Vue`);
 
     // Store the accessToken securely in your frontend, e.g., in local storage or a cookie
     localStorage.setItem('access_token', accessToken);
