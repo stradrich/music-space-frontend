@@ -100,7 +100,7 @@ const router = createRouter({
     {
       path: '/createListing/user/:id',
       name: 'Create Listing',
-      component: () => import ('../views/CreateListing.vue')
+      component: () => import ('../views/CreateListingForm.vue')
     },
     /// Update and Delete listings by ID
     {
@@ -164,7 +164,14 @@ const router = createRouter({
       component: () => import ('../views/Booking.vue')
     },
   
-
+  /// SECTION 4 (Shared: Provider and Customer profile card)
+    /// PROFILE 
+    /// See own profile (Empty by default)
+    {
+      path: '/profileCard',
+      name: 'Profile Card',
+      component: () => import ('../views/ProfileCard.vue')
+    },
   
 
   ]

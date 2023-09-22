@@ -1,12 +1,12 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter, RouterLink, RouterView } from 'vue-router'
-// import { useAuthStore } from './stores/auth'
+import { useAuthStore } from './stores/auth'
 import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
 
 const router = useRouter()
-// const authStore = useAuthStore()
+const authStore = useAuthStore()
 
 // first page when visiting app
 const goToSignUp = () => {
@@ -32,10 +32,11 @@ onMounted(()=> {
    <!-- always on top -->
   <div class="h-screen bg-white"  >
     <Navbar/>
+
   <div>
     <!-- show homepage and changes according to activity -->
       <RouterView/>
-    </div>
+  </div>
 
     <!-- always below -->
      <Footer class="mb-auto"/> 

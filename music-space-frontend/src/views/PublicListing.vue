@@ -19,7 +19,7 @@ export default {
 </script>
 
 <template>
-  <div class="flex justify-center">
+  <div class="flex justify-center mb-0">
     <div class="image-container mx-8" v-for="(image, index) in images" :key="index" loading="lazy">
       <div>
         <h4 class="flex items-center">
@@ -39,10 +39,18 @@ export default {
       </div>
       
       <img :src="image.src" :alt="image.alt">
-      <img :src="image.map">
-      
-    </div>
+    </div>    
   </div>
+
+  <div class="flex justify-center mt-0">
+    <div class="image-container mx-8 " v-for="(image, index) in images" :key="index" loading="lazy">
+        <div>
+          <img :src="image.map">
+        </div>
+  </div>
+  </div>
+ 
+  
   <div class="flex justify-center mt-5">
     <RouterLink to="/login">More... </RouterLink>
   </div>
@@ -54,7 +62,7 @@ export default {
   width: 200px; /* Set your desired width */
   height: 200px; /* Set your desired height */
   overflow: hidden; /* Hide any content that overflows the container */
-  margin: 10px; /* Add spacing between images if needed */
+   margin: 10px; /* Add spacing between images if needed */
 }
 
 /* Style for images within the containers */

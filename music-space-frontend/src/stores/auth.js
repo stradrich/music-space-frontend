@@ -12,9 +12,13 @@ export const useAuthStore = defineStore({
         return {
             currentUser: {
                 id: null,
+                name: null,      // Add name property
                 email: null,
-                role: null
+                role: null,
+                firstName: null, // Add firstName property
+                lastName: null   // Add lastName property
             },
+            
             accessToken: null, // Define accessToken in the state
             userLoggedIn: false, // Initialize userLoggedIn as false
         }
@@ -24,15 +28,23 @@ export const useAuthStore = defineStore({
     },
     actions: {
         // CRUD
+        async checkUserLoggedIn() {
+            try {
+              const currentUser = await this.getCurrentUser();
+              this.userLoggedIn = !currentUser;
+            } catch (error) {
+              console.error('Error checking user login status:', error);
+            }
+          },
         async getCurrentUser() {
             try {
                 const accessToken = localStorage.getItem('access_token')
-
+                console.log(accessToken, `by 🍍🍍🍍`);
                 if (!accessToken) throw 'Access token not found'
 
                 // Decode JWT token using jose.jwt.verify
                 const decodedToken = jose.decodeJwt(accessToken);
-               
+                console.log(decodedToken, `by 🍍🍍🍍`);
 
 
                 if (!decodedToken || !decodedToken.id) throw 'Invalid token or missing user ID'
@@ -57,14 +69,24 @@ export const useAuthStore = defineStore({
                 body: JSON.stringify({ username, firstName, lastName, email, password, major, role }),
               };
           
-            //   const response = await fetch('http://localhost:5174/auth/register', options);
-              const response = await fetch('http://localhost:8080/auth/register', options) // Correct the URL
-              // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
-
+              // const response = await fetch('http://localhost:5174/auth/register', options);
+              const response = await fetch('http://localhost:8080/auth/register', options); // Correct the URL
+          
               if (response.ok) {
                 // Registration was successful (status code 2xx)
-                const data = await response.json();
-                console.log('Successfully registered as a User - by 🍍🍍🍍', data);
+                const user = await response.json(); // Define 'user' here
+          
+                // Update the currentUser state with user information
+                this.currentUser = {
+                  id: user.id,
+                  name: user.username, // Assuming the server provides the username
+                  email: user.email,
+                  role: user.role,
+                  firstName: user.firstName,
+                  lastName: user.lastName,
+                };
+          
+                console.log('Successfully registered as a User - by 🍍🍍🍍', user);
                 // Redirect to the user's profile page (you need to handle this part)
                 router.push('/login');
               } else {
@@ -76,6 +98,7 @@ export const useAuthStore = defineStore({
               console.error(error);
             }
           },
+          
           
         async login(email, password) {
             try {
