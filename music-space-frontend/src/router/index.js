@@ -66,6 +66,12 @@ const router = createRouter({
       name: 'Change Password',
       component: () => import ('../views/ChangePassword.vue')
     },
+      {
+      path: '/profileCard',
+      name: 'Profile Card',
+      component: () => import ('../views/ProfileCard.vue')
+    },
+
     // SECTION 3 (Users)
 
     /// SECTION 3a (Users: Provider - profile, listing and booking)

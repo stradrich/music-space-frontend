@@ -31,6 +31,8 @@ import Button from '../components/Button.vue';
       },
     },
   }
+
+  console.log(currentUser);
 </script>
 
 <template>

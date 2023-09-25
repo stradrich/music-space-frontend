@@ -5,8 +5,11 @@ import { useAuthStore } from './stores/auth'
 import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
 
+
 const router = useRouter()
+// const store = useStore(); // Get the Vuex store instance
 const authStore = useAuthStore()
+const currentUser = ref(null)
 
 // first page when visiting app
 const goToSignUp = () => {
@@ -20,32 +23,34 @@ const user = reactive({
 
 const checkUserLoggedIn = async () => {
   const currentUser = await authStore.getCurrentUser()
-  user.isLoggedIn = !currentUser
+  user.isLoggedIn = !!currentUser // Use !! to convert currentUser to a boolean
 }
 
-onMounted(()=> {
-  checkUserLoggedIn
-})
+onMounted(async () => {
+  try {
+    await authStore.checkUserLoggedIn(); // Ensure the user login status is checked first
+    currentUser.value = await authStore.getCurrentUser(); // Fetch the current user
+  } catch (error) {
+    console.error('Error fetching current user:', error);
+  }
+});
 </script>
 
 <template>
-   <!-- always on top -->
-  <div class="h-screen bg-white"  >
-    <Navbar/>
+  <!-- always on top -->
+  <div class="h-screen bg-white">
+    <Navbar :isLoggedIn="user.isLoggedIn" />
 
-  <div>
-    <!-- show homepage and changes according to activity -->
-      <RouterView/>
-  </div>
+
+    <div>
+      <!-- show homepage and changes according to activity -->
+      <RouterView />
+    </div>
 
     <!-- always below -->
-     <Footer class="mb-auto"/> 
+    <Footer class="mb-auto" />
   </div>
 </template>
 
 <style scoped>
-
-
-
-</style> 
-
+</style>

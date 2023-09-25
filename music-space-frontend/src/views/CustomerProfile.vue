@@ -1,5 +1,8 @@
 <script setup>
 import Button from '../components/Button.vue';
+import { useAuthStore } from '../stores/auth';
+
+const authStore = useAuthStore();
 
 </script>
 
@@ -12,7 +15,10 @@ import Button from '../components/Button.vue';
         <p>CUSTOMER PROFILE (Space User)</p>
     </div>
     <div class="flex justify-center">
-       <p>Welcome,  <RouterLink to="/profileCard">Name</RouterLink></p>
+        <span v-if="authStore.currentUser">Welcome, <RouterLink to='/profileCard'>{{ authStore.currentUser.name }}</RouterLink></span>
+       <span v-else>Not logged in</span>
+       <!-- <span v-if="$store.auth.currentUser">Welcome, <RouterLink to='/profileCard'>{{ $store.auth.currentUser.name}}</RouterLink></span>
+       <span v-else>Not logged in</span> -->
     </div>
     <div>
         <RouterLink to="/" class="flex justify-center">You have 0 booking</RouterLink>

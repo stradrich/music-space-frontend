@@ -3,21 +3,25 @@ import NavLinks from './NavLinks.vue';
 import NavLinkLogin from './NavLinkLogin.vue';
 import Button from './Button.vue';
 import DropdownMenu from './DropdownMenu.vue';
-import { ref, watch } from 'vue';
+
+import { computed, ref, watch, onMounted } from 'vue';
+// import { useAuthStore, fetchCurrentUser } from '../stores/auth';
 import { useAuthStore } from '../stores/auth';
+import { defineProps } from 'vue';
+
+const { isLoggedIn } = defineProps(['isLoggedIn']);
 
 const authStore = useAuthStore();
-const userLoggedIn = ref(false);
-const currentUser = ref({ name: '' });
-
+const currentUser = ref(null);
+const user = ref({
+  isLoggedIn: false
+});
 
 const checkUserLoggedIn = async () => {
-  const user = await authStore.getCurrentUser();
-  userLoggedIn.value = !!user;
-  if (userLoggedIn.value) {
-    currentUser.value.name = user.name;
-  }
-};
+  const currentUser = await authStore.getCurrentUser();
+  user.isLoggedIn = !!currentUser; // Use !! to convert currentUser to a boolean
+  
+}
 
 // Watch for changes in authentication state
 watch(() => authStore.currentUser, () => {
@@ -26,7 +30,16 @@ watch(() => authStore.currentUser, () => {
 
 // Initial check
 checkUserLoggedIn();
+
+onMounted(async () => {
+  try {
+    currentUser.value = await authStore.getCurrentUser(); // Fetch the current user
+  } catch (error) {
+    console.error('Error fetching current user:', error);
+  }
+});
 </script>
+
 
 <template>
   <nav class="bg-white">
@@ -35,19 +48,10 @@ checkUserLoggedIn();
         <button>
           <img width="80" height="80" src="https://img.icons8.com/pastel-glyph/64/planet-on-the-dark-side.png" alt="planet-on-the-dark-side" />
         </button>
-
-        <!-- <img class="ml-6" style="height: 20px; width: 20px;" src="https://liminalplay.com/wp-content/uploads/2021/11/Ma-Kanji.png" alt="間" loading="lazy"> -->
-        <!-- <span class="ml-2">&#x2022</span> -->
         <RouterLink to="/" class="ml-15"><span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white mr-16">Melkro's</span></RouterLink>
-
-        <!-- Conditional rendering for navigation links -->
-        <NavLinks v-if="!userLoggedIn" />
-
-        <!-- Conditional rendering for user-specific links -->
+        <NavLinks v-if="!isLoggedIn" />
         <template v-else>
-            <NavLinkLogin :name="currentUser" :isLoggedIn="isLoggedIn" />
-
-
+          <NavLinkLogin :currentUser="currentUser" :isLoggedIn="isLoggedIn" /> <!-- Pass isLoggedIn as a prop -->
         </template>
       </div>
     </div>

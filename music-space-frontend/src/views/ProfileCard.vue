@@ -1,5 +1,7 @@
   <script>
   import Button from '../components/Button.vue';
+
+
     export default {
       data: () => ({
         name: '',

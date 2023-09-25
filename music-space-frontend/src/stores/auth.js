@@ -1,9 +1,23 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 // JWT utils
 import * as jose from 'jose';
-import router from '../router/index'
-// import jwt from 'jsonwebtoken';
+import router from '../router/index';
 
+
+// Define fetchCurrentUser function outside the store
+async function fetchUserData() {
+  try {
+    const response = await fetch('http://localhost:8080/users/:id'); // Replace with your actual API endpoint
+    if (!response.ok) {
+      throw new Error('Failed to fetch user data');
+    }
+    const userData = await response.json(); // Assuming the response is in JSON format
+    return userData;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    throw error;
+  }
+}
 
 export const useAuthStore = defineStore({
     id: 'auth',
@@ -12,55 +26,62 @@ export const useAuthStore = defineStore({
         return {
             currentUser: {
                 id: null,
-                name: null,      // Add name property
-                email: null,
-                role: null,
-                firstName: null, // Add firstName property
-                lastName: null   // Add lastName property
+                name: '',       // Set to an empty string
+                email: '',
+                role: '',
+                firstName: '',
+                lastName: '',
+                major: ''
             },
-            
-            accessToken: null, // Define accessToken in the state
-            userLoggedIn: false, // Initialize userLoggedIn as false
-        }
+            accessToken: null,
+            userLoggedIn: false,
+        };
     },
     getters: {
         isAuthenticated: (state) => !!state.currentUser,
     },
     actions: {
         // CRUD
+        
         async checkUserLoggedIn() {
             try {
-              const currentUser = await this.getCurrentUser();
-              this.userLoggedIn = !currentUser;
+                const currentUser = await this.getCurrentUser();
+                this.userLoggedIn = !currentUser;
             } catch (error) {
-              console.error('Error checking user login status:', error);
+                console.error('Error checking user login status:', error);
+                throw error;
             }
-          },
+        },
+
         async getCurrentUser() {
             try {
-                const accessToken = localStorage.getItem('access_token')
+                const accessToken = localStorage.getItem('access_token');
                 console.log(accessToken, `by 🍍🍍🍍`);
-                if (!accessToken) throw 'Access token not found'
+                if (!accessToken) throw 'Access token not found';
 
-                // Decode JWT token using jose.jwt.verify
                 const decodedToken = jose.decodeJwt(accessToken);
                 console.log(decodedToken, `by 🍍🍍🍍`);
 
-
-                if (!decodedToken || !decodedToken.id) throw 'Invalid token or missing user ID'
-
+                if (!decodedToken || !decodedToken.id) throw 'Invalid token or missing user ID';
+                console.log(decodedToken);
                 const userDetails = {
                     id: decodedToken.id,
                     email: decodedToken.email,
-                    role: decodedToken.role
-                }
-                return userDetails
+                    role: decodedToken.role,
+                    name: decodedToken.name,          // Include name field
+                    firstName: decodedToken.firstName, // Include firstName field
+                    lastName: decodedToken.lastName,   // Include lastName field
+                    major: decodedToken.major,
+                    
+                };
+                console.log(userDetails);
+                // this.currentUser = userDetails; // Update the currentUser state
+                return userDetails;
             } catch (error) {
                 console.log(error);
             }
         },
 
-  
         async registerUser(username, firstName, lastName, email, password, major, role) {
             try {
               const options = {
@@ -84,6 +105,7 @@ export const useAuthStore = defineStore({
                   role: user.role,
                   firstName: user.firstName,
                   lastName: user.lastName,
+                  major: user.major
                 };
           
                 console.log('Successfully registered as a User - by 🍍🍍🍍', user);
@@ -98,126 +120,28 @@ export const useAuthStore = defineStore({
               console.error(error);
             }
           },
-          
-          
-        async login(email, password) {
-            try {
-                console.log('Received email:', email);
-                console.log('Received password:', password);
-                //    Client-side validation
-                if (!email || !password) {
-                    throw new Error('Email and password are required.');
-                }
 
-                const options = {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json'},
-                    body: JSON.stringify({email, password})
-                }
-
-                // const response = await fetch('http://localhost:5174/auth/login', options) // Correct the URL
-                const response = await fetch('http://localhost:8080/auth/login', options) // Correct the URL
-                console.log('Response Status Code:', response.status);
-                // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
-                const data = await response.json()
-                console.log('Response Data:', data);
-
-                if (!response.ok) {
-                    throw new Error(data.message || 'Login failed.');
-                  }
-                
-                const accessToken = data.accessToken
-                this.accessToken = accessToken
-                console.log('Login - Access Token', accessToken);
-
-                // Save access token to local storage
-                localStorage.setItem('access_token', accessToken)
-                console.log('Local storage access token', accessToken);
-
-                 // Wait for a short delay to ensure the access token is saved and retrieved
-                 await new Promise(resolve => setTimeout(resolve, 1000)); // Adjust the delay as needed
-                
-
-            } catch (error) {
-                router.push('/login');
-                console.error(error);
-            }
-        },
-        async forgotPassword(email) {
-            try {
-                const options = {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json'},
-                    body: JSON.stringify({email})
-                }
-
-                // const response = await fetch('http://localhost:5174/auth/forgot-password', options) // Correct the URL
-                const response = await fetch('http://localhost:8080/auth/forgot-password', options) // Correct the URL
-                // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
-                const data = await response.json()
-
-                console.log(data)
-                console.log('User forgot password - by 🍍🍍🍍');
-            } catch (error) {
-                console.error(error)
-            }
-        },
-        async resetPassword(newPassword, resetToken) {
-            try {
-                const options = {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json'},
-                    body: JSON.stringify({newPassword, resetToken})
-                }
-
-                // const response = await fetch('http://localhost:5174/auth/reset-password', options) // Correct the URL
-                const response = await fetch('http://localhost:8080/auth/reset-password', options) // Correct the URL
-                // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
-                const data = await response.json()
-
-                console.log(data);
-                console.log('User reset password - by 🍍🍍🍍');
-            } catch (error) {
-                console.error(error)
-            }
-        },
-        // get auth token to verify!
-        async changePassword(currentPassword, newPassword) {
-            try {
-                const accessToken = this.accessToken
-                const options = {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        Authorization: accessToken
-                    },
-                    body: JSON.stringify({currentPassword, newPassword}) // Change resetToken to currentPassword
-                }
-
-                // const response = await fetch('http://localhost:5174/auth/change-password', options) // Correct the URL
-                const response = await fetch('http://localhost:8080/auth/change-password', options) // Correct the URL
-                // const response = await fetch('https://music-space-api-dev-e3fa5fcs7a-as.a.run.app/music-space', options),
-                const data = await response.json()
-
-                console.log(data);
-                console.log('User password changed - by 🍍🍍🍍');
-            } catch (error) {
-                console.error(error);
-            }
-        },
         async logout() {
-            // Delete access token from local storage
-            localStorage.removeItem('access_token'); // Add a semicolon
-
-            // Reset the currentUser state
+            localStorage.removeItem('access_token');
             this.currentUser = {
                 id: null,
-                name: null,
-                email: null,
-                role: null
-            }
-
+                name: '',
+                email: '',
+                role: '',
+                firstName: '',
+                lastName: '',
+            };
+            this.userLoggedIn = false;
             console.log('Successfully logged out - by 🍍🍍🍍');
-        }
-    }
-})
+        },
+        
+    },
+    mounted() {
+        this.$store.auth.getCurrentUser();
+      },
+    
+});
+
+
+
+
