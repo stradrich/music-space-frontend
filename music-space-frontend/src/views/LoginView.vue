@@ -2,13 +2,20 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'; 
 import { useAuthStore } from '../stores/auth'
+// import { useUserStore } from '../stores/user';
 
 import axios from 'axios';
 
 const authStore = useAuthStore()
+// const userStore = useUserStore();
 
+const currentUser = ref(null)
 const email = ref('');
 const password = ref('');
+const name = ref('')
+const firstName = ref('')
+const lastName =ref('')
+const major = ref('')
 // const errors = ref({});
 const showPassword = ref(false);
 const router = useRouter(); // Create a router instance
@@ -49,7 +56,8 @@ const router = useRouter(); // Create a router instance
 //     }
 //   }
 // };
-
+// userStore.setUser(userData);
+// userStore.setAccessToken(accessToken);
 
 const login = async () => {
   try {
@@ -61,6 +69,10 @@ const login = async () => {
     const response = await axios.post('http://localhost:8080/auth/login', {
       email: email.value,
       password: password.value,
+      username: name.value,
+      firstName: firstName.value,
+      lastName: lastName.value,
+      major: major.value,
     });
 
     // Extract the JWT token from the response
@@ -74,11 +86,19 @@ const login = async () => {
     const currentUser = await authStore.getCurrentUser();
     console.log(`Login - Current User, ${currentUser?.id}`);
     console.log(`Current User's role:, ${currentUser?.role}`);
+    console.log(`Current User's name:, ${currentUser?.name}`);
+    console.log(`Current User's firstName:, ${currentUser?.firstName}`);
+    console.log(`Current User's lastName:, ${currentUser?.lastName}`);
+    console.log(`Current User's major:, ${currentUser?.major}`);
 
     // Determine if the login was successful based on your criteria
     const isSuccess = currentUser.role !== null; // Change this based on your success condition
     console.log(isSuccess);
     console.log(currentUser.role);
+    console.log(currentUser.name);
+    console.log(currentUser.firstName);
+    console.log(currentUser.lastName);
+    console.log(currentUser.major);
 
     if (isSuccess) {
       console.log(currentUser.role);
@@ -104,11 +124,6 @@ const login = async () => {
     console.error('Login error:', error);
   }
 };
-
-
-
-
-
 
 </script>
 
