@@ -3,6 +3,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      //  The "Home" page includes introductory content, featured content, and highlights of what the website offers.
+      path: '/adminDashboard',
+      name: 'Admin Dashboard',
+      component: () => import('../views/AdminDashboard.vue')
+    },
     // SECTION 1 (main content):
     // Both the "Home" and "About" pages are integral parts of the main content area where the core information and messaging of the website are presented to visitors. They are accessed through navigation links in the header or navbar of the website.
     {
