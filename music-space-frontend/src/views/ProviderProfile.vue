@@ -4,6 +4,12 @@ import { useAuthStore } from '../stores/auth';
 
 const authStore = useAuthStore();
 
+// Create a computed property to check if the user is authenticated
+const isAuthenticated = () => {
+  return authStore.isAuthenticated;
+};
+
+
 </script>
 
 <template>
@@ -12,13 +18,19 @@ const authStore = useAuthStore();
     </div>
 
     <div class="flex justify-center">
-        <p>SPACE PROVIDER PROFILE (Space User)</p>
+        <p>SPACE PROVIDER PROFILE (Space Provider)</p>
     </div>
     <div class="flex justify-center">
-        <span v-if="authStore.currentUser">Welcome, <RouterLink to='/profileCard'>{{ authStore.currentUser.name }}</RouterLink></span>
-       <span v-else>Not logged in</span>
-       <!-- <span v-if="$store.auth.currentUser">Welcome, <RouterLink to='/profileCard'>{{ $store.auth.currentUser.name}}</RouterLink></span>
-       <span v-else>Not logged in</span> -->
+        <span v-if="isAuthenticated" class="login">
+          Welcome, 
+          <RouterLink to="/profileCard">
+            <p class="flex justify-center text-lg">
+                {{ authStore.currentUser?.username }}
+            </p>
+        </RouterLink>
+        </span>
+        <span v-else>Not logged in</span>
+    
     </div>
     <div>
         <RouterLink to="/" class="flex justify-center">You have 0 listing</RouterLink>

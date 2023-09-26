@@ -3,10 +3,11 @@ import { ref } from 'vue';
 import Navbar from './Navbar.vue';
 import { useAuthStore } from '../stores/auth';
 import { computed } from 'vue';
+import { RouterLink } from 'vue-router'; // Import RouterLink from vue-router
 
 const authStore = useAuthStore();
-const userLoggedIn = computed(() => !!authStore.currentUser);
-  const currentUser = computed(() => authStore.currentUser);
+const userLoggedIn = computed(() => !!authStore.getCurrentUser);
+const currentUser = computed(() => authStore.getCurrentUser);
 
 const logout = () => {
     authStore.logout(); // Call the logout action from your authentication store
@@ -17,6 +18,41 @@ const isDropdownHidden = ref(true);
 
 const toggleDropdown = () => {
   isDropdownHidden.value = !isDropdownHidden.value;
+};
+
+const getProfileLink = () => {
+  // Determine the link based on the user's role
+  if (currentUser.value.role === 'provider') {
+    const link = `/profile/spaceProvider/${currentUser.value.id}`;
+    console.log('Profile Link for Provider:', link);
+    return link;
+  } else if (currentUser.value.role === 'customer') {
+    const link = `/profile/spaceUser/${currentUser.value.id}`;
+    console.log('Profile Link for Customer:', link);
+    return link;
+  }
+
+  // Add more cases for other roles if needed
+  console.log('Default Profile Link:', '#');
+  return '#'; // Default link
+};
+
+
+
+const getBookingLink = () => {
+  // You can customize this link based on your requirements
+  return '/booking'; // Example link
+};
+
+const getListingLink = () => {
+  // You can customize this link based on your requirements
+  return '/publicListing'; // Example link
+};
+
+const goToLoginPage = () => {
+  // Redirect the user to the login page
+  // You can customize this route based on your router setup
+  router.push('/login');
 };
 </script>
 
@@ -47,13 +83,19 @@ const toggleDropdown = () => {
       class="py-2 text-sm text-gray-700 dark:text-gray-200 mb-5"
       aria-labelledby="dropdownDefaultButton"
     >
+       <!-- REDIRECT TO OWN PAGE BASED ON ROLE -->
+      <li class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+        <RouterLink v-if="userLoggedIn" :to="getProfileLink()">Profile</RouterLink>
+      </li>
+
+
       <li>
           <!-- If logged in, direct to profile page. If not logged in, go to log in page + sign up. -->
         <a
           href="#"
           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
         >
-        <RouterLink to="#">Profile</RouterLink>
+       <RouterLink to="#">Profile</RouterLink>
         
         </a>
       </li>
