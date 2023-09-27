@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useAuthStore } from '../stores/auth';
 
 const currentUser = ref(null)
@@ -34,6 +34,25 @@ const login = async () => {
     // Optionally, you can display an error message to the user
   }
 };
+
+onMounted(async () => {
+  try {
+    await authStore.checkUserLoggedIn(); // Ensure the user login status is checked first
+    const currentUserData = await authStore.getCurrentUser(); // Fetch the current user
+    loadingCurrentUser.value = false;
+
+    // Handle navigation based on user role
+    if (currentUserData.role === 'provider') {
+      router.push(`/profile/spaceProvider/${currentUserData.id}`);
+    } else if (currentUserData.role === 'customer') {
+      router.push(`/profile/spaceUser/${currentUserData.id}`);
+    }
+  } catch (error) {
+    console.error('Error fetching current user:', error);
+    loadingCurrentUser.value = false; // Set loading to false on error
+  }
+});
+
 </script>
 
 <template>

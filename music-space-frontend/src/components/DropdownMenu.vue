@@ -1,13 +1,14 @@
 <script setup>
-import { ref } from 'vue';
-import Navbar from './Navbar.vue';
+import { ref, onMounted, computed} from 'vue';
 import { useAuthStore } from '../stores/auth';
-import { computed } from 'vue';
+// import { computed } from 'vue';
 import { RouterLink } from 'vue-router'; // Import RouterLink from vue-router
 
 const authStore = useAuthStore();
-const userLoggedIn = computed(() => !!authStore.getCurrentUser);
-const currentUser = computed(() => authStore.getCurrentUser);
+// const userLoggedIn = ref(true); // Your condition to check if the user is logged in
+// const userLoggedIn = computed(() => !!authStore.getCurrentUser);
+const currentUser = computed(() => authStore.currentUser);
+const isLoggedIn = computed(() => authStore.userLoggedIn);
 
 const logout = () => {
     authStore.logout(); // Call the logout action from your authentication store
@@ -20,23 +21,16 @@ const toggleDropdown = () => {
   isDropdownHidden.value = !isDropdownHidden.value;
 };
 
-const getProfileLink = () => {
-  // Determine the link based on the user's role
-  if (currentUser.value.role === 'provider') {
-    const link = `/profile/spaceProvider/${currentUser.value.id}`;
-    console.log('Profile Link for Provider:', link);
-    return link;
-  } else if (currentUser.value.role === 'customer') {
-    const link = `/profile/spaceUser/${currentUser.value.id}`;
-    console.log('Profile Link for Customer:', link);
-    return link;
+const profileLink = computed(() => {
+  if (currentUser.value && currentUser.value.role === 'provider') {
+    return `/profile/spaceProvider/${currentUser.value.id}`;
+  } else if (currentUser.value && currentUser.value.role === 'customer') {
+    return `/profile/spaceUser/${currentUser.value.id}`;
+  } else {
+    // Handle other cases if needed, or provide a default route
+    return '/';
   }
-
-  // Add more cases for other roles if needed
-  console.log('Default Profile Link:', '#');
-  return '#'; // Default link
-};
-
+}); 
 
 
 const getBookingLink = () => {
@@ -54,6 +48,25 @@ const goToLoginPage = () => {
   // You can customize this route based on your router setup
   router.push('/login');
 };
+
+
+onMounted(() => {
+      console.log('DropdownMenu component is mounted.');
+      // You can also check the currentUser data here
+      console.log('CurrentUser:', authStore.currentUser);
+      return {
+      authStore,
+    };
+    });
+
+    
+  
+
+
+
+
+
+
 </script>
 
 <template>
@@ -84,21 +97,23 @@ const goToLoginPage = () => {
       aria-labelledby="dropdownDefaultButton"
     >
        <!-- REDIRECT TO OWN PAGE BASED ON ROLE -->
-      <li class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-        <RouterLink v-if="userLoggedIn" :to="getProfileLink()">Profile</RouterLink>
+       <li class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+        <RouterLink :to="profileLink">Profile</RouterLink>
       </li>
+      <!-- Add debugging info -->
+      <!-- <div v-else>
+        User Logged In: {{ userLoggedIn }}
+        Profile Link: {{ getProfileLink }}
+      </div> -->
 
 
-      <li>
-          <!-- If logged in, direct to profile page. If not logged in, go to log in page + sign up. -->
-        <a
-          href="#"
-          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-        >
-       <RouterLink to="#">Profile</RouterLink>
-        
+      <!-- If logged in, direct to profile page. If not logged in, go to log in page + sign up. -->
+      <!-- <li>
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+          <RouterLink to="#">Profile</RouterLink>
         </a>
-      </li>
+      </li> -->
+      
         <!-- If logged in, direct to booking page. If not logged in, go to log in page + sign up. -->
       <li>
         <a
