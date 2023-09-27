@@ -4,7 +4,7 @@
 </script>
 
 <template> 
-    <Navbar/>  
+    <!-- <Navbar/>   -->
     <div class="flex bg-white shadow-md rounded-md space-x-2 text-xs border p-4 justify-center">
           
           <!-- If logged in, direct to listing page. If not logged in, go to log in page + sign up. -->

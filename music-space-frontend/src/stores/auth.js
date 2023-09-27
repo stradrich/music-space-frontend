@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { ref } from 'vue';
 import * as jose from 'jose';
 import axios from 'axios';
 import router from '../router/index';
@@ -7,9 +8,10 @@ export const useAuthStore = defineStore({
   id: 'auth',
 
   state: () => ({
-    currentUser: null,
-    accessToken: null,
-    userLoggedIn: false,
+    currentUser: ref(null),
+    accessToken: ref(null),
+    userLoggedIn: ref(false),
+    currentRoute: '/',
   }),
 
   getters: {
@@ -17,6 +19,10 @@ export const useAuthStore = defineStore({
   },
 
   actions: {
+    setCurrentRoute(route) {
+      this.currentRoute = route;
+    },
+
     async login(formData) {
       try {
         console.log('Email:', formData.email);
@@ -59,12 +65,7 @@ export const useAuthStore = defineStore({
 
         if (isSuccess) {
           console.log(currentUser.role);
-          if (currentUser.role === 'provider') {
-            router.push(`/profile/spaceProvider/${currentUser.id}`);
-          } else if (currentUser.role === 'customer') {
-            router.push(`/profile/spaceUser/${currentUser.id}`);
-          }
-
+          this.navigateToProfile(currentUser)
           this.userLoggedIn = true;
           alert('Logged in successfully!');
         } else {
@@ -76,6 +77,32 @@ export const useAuthStore = defineStore({
       }
     },
 
+
+    async navigateToProfile() {
+      const currentUser = this.currentUser; // Access currentUser from the store
+    
+      if (currentUser) {
+        const link = currentUser.role;
+        console.log('Profile Link:', link);
+        console.log('Profile Link for Provider:', link);
+        console.log('Profile Link for Customer:', link);
+        if (currentUser.role === 'provider') {
+          router.push(`/profile/spaceProvider/${currentUser.id}`);
+        } else if (currentUser.role === 'customer') {
+          router.push(`/profile/spaceUser/${currentUser.id}`);
+        } else {
+          // Handle other cases if needed, or provide a default route
+          router.push('/');
+        }
+      } else {
+        // Handle the case where currentUser is null
+        // You can redirect the user to a login page or handle it as needed
+        console.error('CurrentUser is null');
+      }
+    },
+    
+    
+
     async checkUserLoggedIn() {
       try {
         const currentUser = await this.getCurrentUser();
@@ -86,10 +113,61 @@ export const useAuthStore = defineStore({
       }
     },
 
+      // DATA FROM SERVER
+
+      // This function is responsible for fetching the user data from an API using the access token stored in local storage.
+      // It includes making an API request, handling the response, and updating the store's state with the user data.
+      // It is designed to retrieve user data from a server.
+      async fetchCurrentUser() {
+        try {
+          const accessToken = localStorage.getItem('access_token');
+          console.log('Access Token:', accessToken);
+      
+          if (!accessToken) throw new Error('Access token not found');
+      
+          const response = await axios.get('http://localhost:8080/auth/current-user', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+      
+          if (response.ok) {
+            const userDetails = response.data; // Adjust this based on your API response structure
+      
+            // Check if 'role' is present in userDetails
+            if (userDetails && userDetails.role) {
+              // Update the store's currentUser state
+              this.currentUser = userDetails;
+      
+              console.log(currentUser);
+              console.log('User Data:', userDetails);
+              return userDetails;
+            } else {
+              const errorData = await response.json();
+              console.error('API Error:', errorData);
+              console.error('User role is missing or null in API response.');
+              throw 'Error fetching user data';
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching current user:', error);
+          throw error;
+        }
+      },
+      
+      
+    
+
+    // DATA FROM LOCAL STORAGE
+
+    // This function decodes the access token stored in local storage and extracts user details from it.
+    // It does not make an API request and is primarily used for extracting user information locally from the access token.
+    // It is typically used for quick access to user details without the need for an API call.
     async getCurrentUser() {
       try {
         const accessToken = localStorage.getItem('access_token');
         console.log(accessToken, 'by 🍍🍍🍍');
+        
         if (!accessToken) throw 'Access token not found';
     
         const decodedToken = jose.decodeJwt(accessToken);
@@ -107,20 +185,12 @@ export const useAuthStore = defineStore({
           major: decodedToken.major,
         };
     
-        // Perform the role-based redirection here
-        if (userDetails.role === 'provider') {
-          router.push(`/profile/spaceProvider/${userDetails.id}`);
-        } else if (userDetails.role === 'customer') {
-          router.push(`/profile/spaceUser/${userDetails.id}`);
-        }
-    
-        return userDetails;
+        return userDetails; // Return user details without navigation
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
-    
 
     async registerUser(username, firstName, lastName, email, password, major, role) {
       try {
